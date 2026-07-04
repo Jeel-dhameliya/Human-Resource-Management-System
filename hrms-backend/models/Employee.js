@@ -15,6 +15,18 @@ const employeeSchema = new mongoose.Schema(
       address: { type: String, default: '' },
       profilePic: { type: String, default: '' }, // URL to stored image
       dateOfBirth: Date,
+      nationality: { type: String, default: '' },
+      personalEmail: { type: String, default: '' },
+      gender: { type: String, enum: ['male', 'female', 'other', ''], default: '' },
+      maritalStatus: { type: String, enum: ['single', 'married', 'divorced', 'widowed', ''], default: '' },
+    },
+    bankDetails: {
+      accountNumber: { type: String, default: '' },
+      bankName: { type: String, default: '' },
+      ifscCode: { type: String, default: '' },
+      panNo: { type: String, default: '' },
+      uanNo: { type: String, default: '' },
+      empCode: { type: String, default: '' },
     },
     jobDetails: {
       department: { type: String, default: '' },

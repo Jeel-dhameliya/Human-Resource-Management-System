@@ -143,14 +143,21 @@ const EmployeeProfile = () => {
                 Salary Info
               </button>
             )}
+            <button 
+              className={`pb-4 px-2 font-medium border-b-2 transition-colors ${activeTab === 'security' ? 'border-slate-800 text-slate-800' : 'border-transparent text-slate-500 hover:text-slate-800'}`}
+              onClick={() => setActiveTab('security')}
+            >
+              Security
+            </button>
           </div>
         </div>
 
         {/* Tab Content */}
         <div className="bg-white border border-t-0 border-slate-200 p-8 rounded-b-xl min-h-[500px]">
           {activeTab === 'resume' && <ResumeTab employee={employee} />}
-          {activeTab === 'private' && <div className="text-slate-500 text-center py-20">Private Information Content</div>}
+          {activeTab === 'private' && <PrivateInfoTab employee={employee} />}
           {activeTab === 'salary' && isAdmin && <SalaryInfoTab employee={employee} />}
+          {activeTab === 'security' && <div className="text-slate-500 text-center py-20">Security Information Content</div>}
         </div>
 
       </div>
@@ -233,12 +240,132 @@ const ResumeTab = ({ employee }) => {
   );
 };
 
+// --- Private Info Tab Component ---
+const PrivateInfoTab = ({ employee }) => {
+  const pd = employee.personalDetails || {};
+  const bd = employee.bankDetails || {};
+  const jd = employee.jobDetails || {};
+
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    return new Date(dateString).toLocaleDateString('en-GB'); // DD/MM/YYYY
+  };
+
+  return (
+    <div className="flex gap-16 max-w-5xl">
+      {/* Left Column: Personal Info */}
+      <div className="flex-1 space-y-6">
+        <div className="flex items-center">
+          <span className="w-40 text-slate-600 font-medium">Date of Birth</span>
+          <input type="text" className="flex-1 border-b border-slate-300 px-2 py-1 focus:outline-none focus:border-slate-800" defaultValue={formatDate(pd.dateOfBirth)} />
+        </div>
+        <div className="flex items-center">
+          <span className="w-40 text-slate-600 font-medium">Residing Address</span>
+          <input type="text" className="flex-1 border-b border-slate-300 px-2 py-1 focus:outline-none focus:border-slate-800" defaultValue={pd.address} />
+        </div>
+        <div className="flex items-center">
+          <span className="w-40 text-slate-600 font-medium">Nationality</span>
+          <input type="text" className="flex-1 border-b border-slate-300 px-2 py-1 focus:outline-none focus:border-slate-800" defaultValue={pd.nationality} />
+        </div>
+        <div className="flex items-center">
+          <span className="w-40 text-slate-600 font-medium">Personal Email</span>
+          <input type="text" className="flex-1 border-b border-slate-300 px-2 py-1 focus:outline-none focus:border-slate-800" defaultValue={pd.personalEmail} />
+        </div>
+        <div className="flex items-center">
+          <span className="w-40 text-slate-600 font-medium">Gender</span>
+          <input type="text" className="flex-1 border-b border-slate-300 px-2 py-1 focus:outline-none focus:border-slate-800 capitalize" defaultValue={pd.gender} />
+        </div>
+        <div className="flex items-center">
+          <span className="w-40 text-slate-600 font-medium">Marital Status</span>
+          <input type="text" className="flex-1 border-b border-slate-300 px-2 py-1 focus:outline-none focus:border-slate-800 capitalize" defaultValue={pd.maritalStatus} />
+        </div>
+        <div className="flex items-center">
+          <span className="w-40 text-slate-600 font-medium">Date of Joining</span>
+          <input type="text" className="flex-1 border-b border-slate-300 px-2 py-1 focus:outline-none focus:border-slate-800" defaultValue={formatDate(jd.joinDate)} />
+        </div>
+      </div>
+
+      {/* Right Column: Bank Details */}
+      <div className="flex-1 space-y-6">
+        <h3 className="font-semibold text-slate-800 border-b border-slate-200 pb-2 mb-4">Bank Details</h3>
+        <div className="flex items-center">
+          <span className="w-40 text-slate-600 font-medium">Account Number</span>
+          <input type="text" className="flex-1 border-b border-slate-300 px-2 py-1 focus:outline-none focus:border-slate-800" defaultValue={bd.accountNumber} />
+        </div>
+        <div className="flex items-center">
+          <span className="w-40 text-slate-600 font-medium">Bank Name</span>
+          <input type="text" className="flex-1 border-b border-slate-300 px-2 py-1 focus:outline-none focus:border-slate-800" defaultValue={bd.bankName} />
+        </div>
+        <div className="flex items-center">
+          <span className="w-40 text-slate-600 font-medium">IFSC Code</span>
+          <input type="text" className="flex-1 border-b border-slate-300 px-2 py-1 focus:outline-none focus:border-slate-800" defaultValue={bd.ifscCode} />
+        </div>
+        <div className="flex items-center">
+          <span className="w-40 text-slate-600 font-medium">PAN No</span>
+          <input type="text" className="flex-1 border-b border-slate-300 px-2 py-1 focus:outline-none focus:border-slate-800 uppercase" defaultValue={bd.panNo} />
+        </div>
+        <div className="flex items-center">
+          <span className="w-40 text-slate-600 font-medium">UAN NO</span>
+          <input type="text" className="flex-1 border-b border-slate-300 px-2 py-1 focus:outline-none focus:border-slate-800" defaultValue={bd.uanNo} />
+        </div>
+        <div className="flex items-center">
+          <span className="w-40 text-slate-600 font-medium">Emp Code</span>
+          <input type="text" className="flex-1 border-b border-slate-300 px-2 py-1 focus:outline-none focus:border-slate-800" defaultValue={bd.empCode || employee.userId?.employeeId} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- Salary Info Tab Component ---
 const SalaryInfoTab = ({ employee }) => {
   const sal = employee.salaryInfo || {};
   const comps = sal.components || {};
-  const pf = sal.pf || {};
-  const tax = sal.tax || {};
+  const initialPf = sal.pf || {};
+  const initialTax = sal.tax || {};
+
+  const [wage, setWage] = useState(sal.monthWage || 50000);
+  
+  // Salary Engine State
+  const [basic, setBasic] = useState({ pct: 50.00, amt: 0 });
+  const [hra, setHra] = useState({ pct: 50.00, amt: 0 });
+  const [standard, setStandard] = useState({ pct: 16.67, amt: 4167 });
+  const [performance, setPerformance] = useState({ pct: 8.33, amt: 0 });
+  const [lta, setLta] = useState({ pct: 8.33, amt: 0 });
+  const [fixed, setFixed] = useState({ pct: 11.67, amt: 0 });
+  const [pf, setPf] = useState({ pct: 12.00, amt: 0 });
+
+  useEffect(() => {
+    const w = parseFloat(wage) || 0;
+    
+    // Engine Logic:
+    const bAmt = w * (basic.pct / 100);
+    const hAmt = bAmt * (hra.pct / 100);
+    const pAmt = bAmt * (performance.pct / 100);
+    const lAmt = bAmt * (lta.pct / 100);
+    
+    // PF is 12% of basic
+    const pfAmt = bAmt * (pf.pct / 100);
+
+    // Standard is fixed amount logic (or percent of basic?). The doc says "Standard Allowance 4167" and "16.67%". 
+    // Assuming Standard is just fixed or percent based on user preference, we'll keep its amt static for now or computed if needed. 
+    // Wait, the doc says "Value: Percentage field... Standard Allowance 4167". 
+    // So if Standard is 4167 fixed. 
+    const sAmt = 4167;
+
+    // Fixed Allowance = Wage - (Basic + HRA + Standard + Performance + LTA)
+    let fAmt = w - (bAmt + hAmt + sAmt + pAmt + lAmt);
+    if (fAmt < 0) fAmt = 0; // Prevent negative fixed allowance
+
+    setBasic(prev => ({ ...prev, amt: bAmt }));
+    setHra(prev => ({ ...prev, amt: hAmt }));
+    setStandard(prev => ({ ...prev, amt: sAmt }));
+    setPerformance(prev => ({ ...prev, amt: pAmt }));
+    setLta(prev => ({ ...prev, amt: lAmt }));
+    setFixed(prev => ({ ...prev, amt: fAmt }));
+    setPf(prev => ({ ...prev, amt: pfAmt }));
+
+  }, [wage, basic.pct, hra.pct, performance.pct, lta.pct, pf.pct]);
 
   return (
     <div className="max-w-4xl">
@@ -247,12 +374,22 @@ const SalaryInfoTab = ({ employee }) => {
         <div className="space-y-6">
           <div className="flex items-center gap-4">
             <span className="w-28 text-slate-700 font-medium">Month Wage</span>
-            <input type="text" className="w-32 border-b border-slate-300 px-2 py-1 text-right focus:outline-none focus:border-slate-800" defaultValue={sal.monthWage || 50000} />
+            <input 
+              type="number" 
+              className="w-32 border-b border-slate-300 px-2 py-1 text-right focus:outline-none focus:border-slate-800" 
+              value={wage}
+              onChange={(e) => setWage(e.target.value)}
+            />
             <span className="text-slate-500">/ Month</span>
           </div>
           <div className="flex items-center gap-4">
             <span className="w-28 text-slate-700 font-medium">Yearly wage</span>
-            <input type="text" className="w-32 border-b border-slate-300 px-2 py-1 text-right focus:outline-none focus:border-slate-800" defaultValue={sal.yearlyWage || 600000} />
+            <input 
+              type="number" 
+              className="w-32 border-b border-slate-300 px-2 py-1 text-right focus:outline-none focus:border-slate-800" 
+              value={(parseFloat(wage) || 0) * 12}
+              readOnly
+            />
             <span className="text-slate-500">/ Yearly</span>
           </div>
         </div>
@@ -279,43 +416,49 @@ const SalaryInfoTab = ({ employee }) => {
             <ComponentRow 
               label="Basic Salary" 
               desc="Define Basic salary from company cost compute it based on monthly Wages"
-              amount={comps.basicSalary?.amount || '25000.00'}
-              pct={comps.basicSalary?.percentage || '50.00'}
+              amount={basic.amt.toFixed(2)}
+              pct={basic.pct}
+              onPctChange={(val) => setBasic(prev => ({...prev, pct: val}))}
             />
             
             <ComponentRow 
               label="House Rent Allowance" 
               desc="HRA provided to employees 50% of the basic salary"
-              amount={comps.houseRentAllowance?.amount || '12500.00'}
-              pct={comps.houseRentAllowance?.percentage || '50.00'}
+              amount={hra.amt.toFixed(2)}
+              pct={hra.pct}
+              onPctChange={(val) => setHra(prev => ({...prev, pct: val}))}
             />
             
             <ComponentRow 
               label="Standard Allowance" 
               desc="A standard allowance is a predetermined, fixed amount provided to employees as part of their salary"
-              amount={comps.standardAllowance?.amount || '4167.00'}
-              pct={comps.standardAllowance?.percentage || '16.67'}
+              amount={standard.amt.toFixed(2)}
+              pct={standard.pct}
+              onPctChange={() => {}}
             />
             
             <ComponentRow 
               label="Performance Bonus" 
               desc="Variable amount paid during payroll. The value defined by the company and calculated as a % of the basic salary"
-              amount={comps.performanceBonus?.amount || '2083.50'}
-              pct={comps.performanceBonus?.percentage || '8.33'}
+              amount={performance.amt.toFixed(2)}
+              pct={performance.pct}
+              onPctChange={(val) => setPerformance(prev => ({...prev, pct: val}))}
             />
 
             <ComponentRow 
               label="Leave Travel Allowance" 
               desc="LTA is paid by the company to employees to cover their travel expenses, and calculated as a % of the basic salary"
-              amount={comps.leaveTravelAllowance?.amount || '2083.50'}
-              pct={comps.leaveTravelAllowance?.percentage || '8.33'}
+              amount={lta.amt.toFixed(2)}
+              pct={lta.pct}
+              onPctChange={(val) => setLta(prev => ({...prev, pct: val}))}
             />
 
             <ComponentRow 
               label="Fixed Allowance" 
               desc="Fixed allowance portion of wages is determined after calculating all salary components"
-              amount={comps.fixedAllowance?.amount || '2918.00'}
-              pct={comps.fixedAllowance?.percentage || '11.67'}
+              amount={fixed.amt.toFixed(2)}
+              pct={fixed.pct}
+              onPctChange={() => {}}
             />
           </div>
         </div>
@@ -328,15 +471,17 @@ const SalaryInfoTab = ({ employee }) => {
             <ComponentRow 
               label="Employee" 
               desc="PF is calculated based on the basic salary"
-              amount={pf.employee?.amount || '3000.00'}
-              pct={pf.employee?.percentage || '12.00'}
+              amount={pf.amt.toFixed(2)}
+              pct={pf.pct}
+              onPctChange={(val) => setPf(prev => ({...prev, pct: val}))}
             />
             
             <ComponentRow 
               label="Employer" 
               desc="PF is calculated based on the basic salary"
-              amount={pf.employer?.amount || '3000.00'}
-              pct={pf.employer?.percentage || '12.00'}
+              amount={pf.amt.toFixed(2)}
+              pct={pf.pct}
+              onPctChange={(val) => setPf(prev => ({...prev, pct: val}))}
             />
           </div>
 
@@ -348,7 +493,7 @@ const SalaryInfoTab = ({ employee }) => {
                 <div className="text-[11px] text-slate-400 mt-1 leading-tight">Professional Tax deducted from the Gross salary</div>
               </div>
               <div className="w-[50%] flex items-center justify-end gap-2">
-                <input type="text" className="w-24 border-b border-slate-300 px-1 py-0.5 text-right focus:outline-none focus:border-slate-800" defaultValue={tax.professionalTax?.amount || '200.00'} />
+                <input type="text" className="w-24 border-b border-slate-300 px-1 py-0.5 text-right focus:outline-none focus:border-slate-800" defaultValue={initialTax.professionalTax?.amount || '200.00'} />
                 <span className="text-slate-500 w-12">₹ / month</span>
               </div>
             </div>
@@ -359,16 +504,26 @@ const SalaryInfoTab = ({ employee }) => {
   );
 };
 
-const ComponentRow = ({ label, desc, amount, pct }) => (
+const ComponentRow = ({ label, desc, amount, pct, onPctChange }) => (
   <div className="flex justify-between items-start">
     <div className="w-[45%]">
       <div className="font-medium text-slate-700">{label}</div>
       <div className="text-[11px] text-slate-400 mt-1 leading-tight">{desc}</div>
     </div>
     <div className="w-[55%] flex justify-end items-center gap-2">
-      <input type="text" className="w-24 border-b border-slate-300 px-1 py-0.5 text-right focus:outline-none focus:border-slate-800" defaultValue={amount} />
+      <input 
+        type="text" 
+        className="w-24 border-b border-slate-300 px-1 py-0.5 text-right focus:outline-none focus:border-slate-800 bg-slate-50 text-slate-600" 
+        value={amount} 
+        readOnly 
+      />
       <span className="text-slate-500 w-16">₹ / month</span>
-      <input type="text" className="w-16 border-b border-slate-300 px-1 py-0.5 text-right focus:outline-none focus:border-slate-800 ml-4" defaultValue={pct} />
+      <input 
+        type="number" 
+        className="w-16 border-b border-slate-300 px-1 py-0.5 text-right focus:outline-none focus:border-slate-800" 
+        value={pct} 
+        onChange={(e) => onPctChange && onPctChange(parseFloat(e.target.value) || 0)}
+      />
       <span className="text-slate-500">%</span>
     </div>
   </div>
