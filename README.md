@@ -7,25 +7,25 @@
 
 ## 🌟 Key Features
 
-### 🔐 Authentication & Role-Based Access
+###  Authentication & Role-Based Access
 - **Secure Onboarding**: Sign up using Email, Password (with strict security rule enforcement), Company Name, Logo, and custom **Employee ID** (e.g., `EMP-101`, auto-generated if left blank).
 - **Dual Role System**: Clean segregation of duties and interfaces between **Admin / HR Officer** and **Employee** roles.
 
 ---
 
-### 📊 Role-Based Dashboards
-- **👨‍💼 Admin / HR Officer Dashboard**:
+###  Role-Based Dashboards
+- ** Admin / HR Officer Dashboard**:
   - Searchable, responsive grid of all organizational employees with real-time today's check-in status badges.
   - Interactive **NEW** button launching an instant employee creation modal directly from the dashboard.
   - Full visibility into organizational attendance records and pending leave approvals.
-- **👨‍💻 Employee Dashboard**:
+- ** Employee Dashboard**:
   - Interactive **Quick-Access Cards** for immediate navigation to **Profile**, **Attendance**, **Leave Requests**, and **Logout**.
   - **Real-Time Activity & Alerts Panel** tracking daily check-in status (Checked In vs. Pending) and leave allocation availability.
 
 ---
 
-### 👤 Employee Profile & Payroll Management
-- **💰 Read-Only vs. Editable Payroll Structure**:
+###  Employee Profile & Payroll Management
+- ** Read-Only vs. Editable Payroll Structure**:
   - **Employees** can view their detailed monthly/yearly wage breakdown, salary components (Basic, HRA, Allowances, Bonus), Provident Fund (PF), and Tax deductions in **read-only mode**.
   - **Admins** gain interactive controls and a **"Save Salary Structure"** button to dynamically update and persist employee salary components.
 - **📝 Interactive Contact & Job Details**:
@@ -34,7 +34,7 @@
 
 ---
 
-### 🗓️ Leave & Time-Off Management
+###  Leave & Time-Off Management
 - **Visual Calendar Application**: Apply for **Paid**, **Sick**, or **Unpaid** leaves by selecting date ranges directly on an interactive calendar view.
 - **Remarks & Medical Certificates**: Employees can attach detailed reasons/remarks and upload medical certificates (files/images) for sick leave verification.
 - **Admin Review Table**: Dedicated review table for HR Officers featuring employee remarks and downloadable document verification links (**"View Cert"**) before approving or rejecting requests.
@@ -42,14 +42,14 @@
 
 ---
 
-### ⏰ Attendance Tracking
+###  Attendance Tracking
 - **One-Click Check-In / Check-Out**: Seamless time tracking integrated directly into the top navigation bar.
 - **Monthly & Weekly Views**: Track attendance history with distinct status indicators (**Present**, **Absent**, **Half-day**, **Leave**).
 - **Unrestricted HR Oversight**: Admins can browse, search, and audit attendance records across any historical month or year.
 
 ---
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 | Area | Technologies Used |
 | :--- | :--- |
@@ -59,7 +59,7 @@
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (v18 or higher)
@@ -102,7 +102,7 @@ npm run dev
 
 ---
 
-## 🧪 Testing Role-Based Workflows
+##  Testing Role-Based Workflows
 
 1. **Testing Admin Role**:
    - Go to `http://localhost:5173/signup`.
