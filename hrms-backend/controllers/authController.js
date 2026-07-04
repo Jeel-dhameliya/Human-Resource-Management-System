@@ -177,20 +177,18 @@ const login = async (req, res, next) => {
 // @access  Public
 const getCompanyLogo = async (req, res, next) => {
   try {
-    // Find the first admin user
-    const adminUser = await User.findOne({ role: 'admin' }).sort({ createdAt: 1 });
-    if (!adminUser) {
-      return res.status(404).json({ message: 'No admin found.' });
-    }
+    // Find the newest admin user's profile who has a profilePic
+    const adminProfiles = await Employee.find({ 'personalDetails.profilePic': { $ne: '' } }).sort({ createdAt: -1 }).populate('userId');
+    
+    const adminProfileWithLogo = adminProfiles.find(p => p.userId?.role === 'admin');
 
-    const adminProfile = await Employee.findOne({ userId: adminUser._id });
-    if (!adminProfile || !adminProfile.personalDetails?.profilePic) {
+    if (!adminProfileWithLogo) {
       return res.status(404).json({ message: 'No logo found.' });
     }
 
     res.status(200).json({ 
-      logoUrl: `/${adminProfile.personalDetails.profilePic}`,
-      companyName: adminProfile.companyName 
+      logoUrl: `/${adminProfileWithLogo.personalDetails.profilePic}`,
+      companyName: adminProfileWithLogo.companyName 
     });
   } catch (error) {
     next(error);

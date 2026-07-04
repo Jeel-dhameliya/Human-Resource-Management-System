@@ -43,67 +43,67 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-header">
-        <h1>Human Resource Management System</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-gradient-to-br from-gray-50 to-gray-200">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-semibold text-slate-800 mb-2">Human Resource Management System</h1>
       </div>
       
-      <div className="auth-card">
-        <h2 style={{ textAlign: 'center', marginBottom: '2rem', fontSize: '1.5rem', fontWeight: '500' }}>
+      <div className="bg-white p-12 rounded-2xl shadow-xl w-full max-w-[480px] hover:-translate-y-1 transition-transform duration-300">
+        <h2 className="text-center mb-8 text-2xl font-medium flex justify-center">
           {companyInfo?.logoUrl ? (
             <img 
               src={`http://localhost:5001${companyInfo.logoUrl}`} 
               alt={companyInfo.companyName || "Company Logo"} 
-              style={{ maxHeight: '60px', objectFit: 'contain' }} 
+              className="max-h-[60px] object-contain"
             />
           ) : (
             'App/Web Logo'
           )}
         </h2>
 
-        {error && <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center', fontSize: '0.9rem' }}>{error}</div>}
+        {error && <div className="text-red-500 mb-4 text-center text-sm">{error}</div>}
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Login Id/Email :-</label>
+          <div className="mb-6 relative">
+            <label htmlFor="email" className="block text-sm font-medium text-slate-800 mb-2">Login Id/Email :-</label>
             <input
               type="text"
               id="email"
               name="email"
-              className="form-control"
+              className="w-full px-4 py-3 text-base text-slate-800 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-3 focus:ring-purple-500/15 transition-all"
               value={formData.email}
               onChange={handleChange}
               required
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password :-</label>
+          <div className="mb-6 relative">
+            <label htmlFor="password" className="block text-sm font-medium text-slate-800 mb-2">Password :-</label>
             <input
               type={showPassword ? "text" : "password"}
               id="password"
               name="password"
-              className="form-control"
+              className="w-full px-4 py-3 text-base text-slate-800 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-3 focus:ring-purple-500/15 transition-all"
               value={formData.password}
               onChange={handleChange}
               required
             />
             <button
               type="button"
-              className="password-toggle"
+              className="absolute right-4 top-[2.4rem] text-slate-500 hover:text-purple-600 flex items-center justify-center cursor-pointer bg-transparent border-none"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
 
-          <button type="submit" className="btn-primary" disabled={loading}>
+          <button type="submit" className="w-full p-3.5 text-base font-semibold text-white bg-gradient-to-br from-purple-500 to-purple-400 rounded-lg shadow-[0_4px_12px_rgba(155,81,224,0.3)] hover:shadow-[0_6px_16px_rgba(155,81,224,0.4)] hover:-translate-y-px active:translate-y-px transition-all cursor-pointer border-none" disabled={loading}>
             {loading ? 'SIGNING IN...' : 'SIGN IN'}
           </button>
         </form>
 
-        <div className="auth-footer">
-          Don't have an Account? <Link to="/signup">Sign Up</Link>
+        <div className="mt-8 text-center text-[0.95rem] text-slate-500">
+          Don't have an Account? <Link to="/signup" className="text-purple-500 font-medium hover:text-purple-600 hover:underline transition-colors">Sign Up</Link>
         </div>
       </div>
     </div>

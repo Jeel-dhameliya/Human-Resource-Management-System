@@ -68,142 +68,142 @@ const Signup = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-header">
-        <h1>Human Resource Management System</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-gradient-to-br from-gray-50 to-gray-200">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-semibold text-slate-800 mb-2">Human Resource Management System</h1>
       </div>
       
-      <div className="auth-card" style={{ maxWidth: '600px' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '2rem', fontSize: '1.5rem', fontWeight: '500' }}>
+      <div className="bg-white p-12 rounded-2xl shadow-xl w-full max-w-[600px] hover:-translate-y-1 transition-transform duration-300">
+        <h2 className="text-center mb-8 text-2xl font-medium flex justify-center">
           {logoFile ? (
             <img 
               src={URL.createObjectURL(logoFile)} 
               alt="Logo Preview" 
-              style={{ maxHeight: '60px', objectFit: 'contain' }} 
+              className="max-h-[60px] object-contain"
             />
           ) : (
             'App/Web Logo'
           )}
         </h2>
 
-        {error && <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center', fontSize: '0.9rem' }}>{error}</div>}
-        {success && <div style={{ color: 'green', marginBottom: '1rem', textAlign: 'center', fontSize: '0.9rem' }}>{success}</div>}
+        {error && <div className="text-red-500 mb-4 text-center text-sm">{error}</div>}
+        {success && <div className="text-green-500 mb-4 text-center text-sm">{success}</div>}
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group" style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
-            <div style={{ flex: 1 }}>
-              <label htmlFor="companyName">Company Name :-</label>
+          <div className="mb-6 relative flex gap-3 items-end">
+            <div className="flex-1">
+              <label htmlFor="companyName" className="block text-sm font-medium text-slate-800 mb-2">Company Name :-</label>
               <input
                 type="text"
                 id="companyName"
                 name="companyName"
-                className="form-control"
+                className="w-full px-4 py-3 text-base text-slate-800 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-3 focus:ring-purple-500/15 transition-all"
                 value={formData.companyName}
                 onChange={handleChange}
                 required
               />
             </div>
-            <div style={{ position: 'relative' }}>
+            <div className="relative">
               <input 
                 type="file" 
                 id="logo" 
                 name="logo" 
                 accept="image/*" 
                 onChange={handleFileChange}
-                style={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', cursor: 'pointer' }}
+                className="opacity-0 absolute top-0 left-0 w-full h-full cursor-pointer z-10"
               />
-              <button type="button" className="upload-btn" title="Upload Logo" style={{ pointerEvents: 'none' }}>
+              <button type="button" className="inline-flex items-center justify-center p-3.5 bg-purple-500 text-white rounded-lg cursor-pointer hover:bg-purple-600 transition-colors pointer-events-none" title="Upload Logo">
                 <Upload size={20} />
               </button>
             </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="name">Name :-</label>
+          <div className="mb-6 relative">
+            <label htmlFor="name" className="block text-sm font-medium text-slate-800 mb-2">Name :-</label>
             <input
               type="text"
               id="name"
               name="name"
-              className="form-control"
+              className="w-full px-4 py-3 text-base text-slate-800 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-3 focus:ring-purple-500/15 transition-all"
               value={formData.name}
               onChange={handleChange}
               required
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="email">Email :-</label>
+          <div className="mb-6 relative">
+            <label htmlFor="email" className="block text-sm font-medium text-slate-800 mb-2">Email :-</label>
             <input
               type="email"
               id="email"
               name="email"
-              className="form-control"
+              className="w-full px-4 py-3 text-base text-slate-800 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-3 focus:ring-purple-500/15 transition-all"
               value={formData.email}
               onChange={handleChange}
               required
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="phone">Phone :-</label>
+          <div className="mb-6 relative">
+            <label htmlFor="phone" className="block text-sm font-medium text-slate-800 mb-2">Phone :-</label>
             <input
               type="text"
               id="phone"
               name="phone"
-              className="form-control"
+              className="w-full px-4 py-3 text-base text-slate-800 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-3 focus:ring-purple-500/15 transition-all"
               value={formData.phone}
               onChange={handleChange}
               required
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password :-</label>
+          <div className="mb-6 relative">
+            <label htmlFor="password" className="block text-sm font-medium text-slate-800 mb-2">Password :-</label>
             <input
               type={showPassword ? "text" : "password"}
               id="password"
               name="password"
-              className="form-control"
+              className="w-full px-4 py-3 text-base text-slate-800 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-3 focus:ring-purple-500/15 transition-all"
               value={formData.password}
               onChange={handleChange}
               required
             />
             <button
               type="button"
-              className="password-toggle"
+              className="absolute right-4 top-[2.4rem] text-slate-500 hover:text-purple-600 flex items-center justify-center cursor-pointer bg-transparent border-none"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password :-</label>
+          <div className="mb-6 relative">
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-800 mb-2">Confirm Password :-</label>
             <input
               type={showConfirmPassword ? "text" : "password"}
               id="confirmPassword"
               name="confirmPassword"
-              className="form-control"
+              className="w-full px-4 py-3 text-base text-slate-800 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-3 focus:ring-purple-500/15 transition-all"
               value={formData.confirmPassword}
               onChange={handleChange}
               required
             />
             <button
               type="button"
-              className="password-toggle"
+              className="absolute right-4 top-[2.4rem] text-slate-500 hover:text-purple-600 flex items-center justify-center cursor-pointer bg-transparent border-none"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
               {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
 
-          <button type="submit" className="btn-primary" disabled={loading}>
+          <button type="submit" className="w-full p-3.5 text-base font-semibold text-white bg-gradient-to-br from-purple-500 to-purple-400 rounded-lg shadow-[0_4px_12px_rgba(155,81,224,0.3)] hover:shadow-[0_6px_16px_rgba(155,81,224,0.4)] hover:-translate-y-px active:translate-y-px transition-all cursor-pointer border-none" disabled={loading}>
             {loading ? 'SIGNING UP...' : 'Sign Up'}
           </button>
         </form>
 
-        <div className="auth-footer">
-          Already have an account? <Link to="/login">Sign In</Link>
+        <div className="mt-8 text-center text-[0.95rem] text-slate-500">
+          Already have an account? <Link to="/login" className="text-purple-500 font-medium hover:text-purple-600 hover:underline transition-colors">Sign In</Link>
         </div>
       </div>
     </div>
