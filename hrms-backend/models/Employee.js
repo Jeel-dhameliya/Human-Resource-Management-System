@@ -9,6 +9,7 @@ const employeeSchema = new mongoose.Schema(
       unique: true,
     },
     fullName: { type: String, required: true },
+    companyName: { type: String, default: '' },
     personalDetails: {
       phone: { type: String, default: '' },
       address: { type: String, default: '' },

@@ -4,15 +4,41 @@ const Employee = require('../models/Employee');
 const generateToken = require('../utils/generateToken');
 const { sendVerificationEmail } = require('../utils/sendEmail');
 
+const generateEmployeeId = async (companyName, fullName) => {
+  const companyPrefix = (companyName || 'Unknown').substring(0, 2).toUpperCase().padEnd(2, 'X');
+  
+  const names = fullName.trim().split(/\s+/);
+  let namePrefix = '';
+  if (names.length >= 2) {
+    namePrefix = names[0].substring(0, 2) + names[names.length - 1].substring(0, 2);
+  } else {
+    namePrefix = names[0].substring(0, 4);
+  }
+  namePrefix = namePrefix.toUpperCase().padEnd(4, 'X');
+
+  const year = new Date().getFullYear();
+
+  // Find count of users created this year to get serial number
+  const startOfYear = new Date(year, 0, 1);
+  const endOfYear = new Date(year + 1, 0, 1);
+  const count = await User.countDocuments({
+    createdAt: { $gte: startOfYear, $lt: endOfYear }
+  });
+  
+  const serial = String(count + 1).padStart(4, '0');
+  
+  return `${companyPrefix}${namePrefix}${year}${serial}`;
+};
+
 // @desc    Register a new user (spec 3.1.1)
 // @route   POST /api/auth/signup
 // @access  Public
 const signup = async (req, res, next) => {
   try {
-    const { employeeId, email, password, role, fullName } = req.body;
+    const { email, password, role, fullName, companyName, phone } = req.body;
 
-    if (!employeeId || !email || !password || !fullName) {
-      return res.status(400).json({ message: 'Please provide all required fields.' });
+    if (!email || !password || !fullName || !companyName) {
+      return res.status(400).json({ message: 'Please provide email, password, full name, and company name.' });
     }
 
     // Basic password rule enforcement (spec: "Password must follow security rules")
@@ -24,27 +50,43 @@ const signup = async (req, res, next) => {
       });
     }
 
-    const userExists = await User.findOne({ $or: [{ email }, { employeeId }] });
+    const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.status(400).json({ message: 'User with this email or employee ID already exists.' });
+      return res.status(400).json({ message: 'User with this email already exists.' });
     }
+
+    const generatedEmployeeId = await generateEmployeeId(companyName, fullName);
 
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
 
     const user = await User.create({
-      employeeId,
+      employeeId: generatedEmployeeId,
       email,
       password,
-      role: role === 'admin' ? 'admin' : 'employee', // default safety: don't trust arbitrary role escalation in production without an invite/admin-approval flow
+      role: role === 'admin' ? 'admin' : 'employee',
+      isVerified: true, // Auto-verify for now since there's no real SMTP configured
       verificationToken,
       verificationTokenExpires,
     });
+
+    const logoPath = req.file ? req.file.path : '';
 
     // Create the linked Employee profile shell
     await Employee.create({
       userId: user._id,
       fullName,
+      companyName,
+      personalDetails: {
+        phone: phone || '',
+        address: '',
+        profilePic: logoPath
+      },
+      jobDetails: {
+        department: '',
+        designation: '',
+        employmentType: 'full-time',
+      }
     });
 
     try {
@@ -57,6 +99,7 @@ const signup = async (req, res, next) => {
     res.status(201).json({
       message: 'Signup successful. Please check your email to verify your account.',
       userId: user._id,
+      employeeId: generatedEmployeeId
     });
   } catch (error) {
     next(error);
@@ -129,4 +172,29 @@ const login = async (req, res, next) => {
   }
 };
 
-module.exports = { signup, verifyEmail, login };
+// @desc    Get the global company logo (from the first admin)
+// @route   GET /api/auth/company-logo
+// @access  Public
+const getCompanyLogo = async (req, res, next) => {
+  try {
+    // Find the first admin user
+    const adminUser = await User.findOne({ role: 'admin' }).sort({ createdAt: 1 });
+    if (!adminUser) {
+      return res.status(404).json({ message: 'No admin found.' });
+    }
+
+    const adminProfile = await Employee.findOne({ userId: adminUser._id });
+    if (!adminProfile || !adminProfile.personalDetails?.profilePic) {
+      return res.status(404).json({ message: 'No logo found.' });
+    }
+
+    res.status(200).json({ 
+      logoUrl: `/${adminProfile.personalDetails.profilePic}`,
+      companyName: adminProfile.companyName 
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { signup, verifyEmail, login, getCompanyLogo };

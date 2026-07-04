@@ -19,6 +19,10 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve uploaded files statically
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'HRMS API is running.' });
