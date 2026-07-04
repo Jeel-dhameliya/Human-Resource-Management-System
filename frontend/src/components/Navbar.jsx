@@ -113,7 +113,7 @@ const Navbar = () => {
 
       <div className="flex gap-8">
         <div className="py-6 px-2 font-medium text-purple-600 cursor-pointer relative after:content-[''] after:absolute after:-bottom-[1px] after:left-0 after:w-full after:h-[3px] after:bg-purple-600 after:rounded-t-sm">Employees</div>
-        <div className="py-6 px-2 font-medium text-slate-500 cursor-pointer relative hover:text-slate-800 transition-colors">Attendance</div>
+        <div className="py-6 px-2 font-medium text-slate-500 cursor-pointer relative hover:text-slate-800 transition-colors" onClick={() => navigate('/attendance')}>Attendance</div>
         <div className="py-6 px-2 font-medium text-slate-500 cursor-pointer relative hover:text-slate-800 transition-colors">Time Off</div>
       </div>
 
