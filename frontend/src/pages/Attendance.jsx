@@ -46,18 +46,11 @@ const Attendance = () => {
 
         if (isAdmin) {
           const res = await axios.get(`/api/attendance/all?month=${month}&year=${year}`, config);
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
 
-          const filtered = res.data
-            .filter(record => {
-              const recordDate = new Date(record.date);
-              recordDate.setHours(0, 0, 0, 0);
-              return (record.status === 'present' || record.status === 'half-day') && recordDate.getTime() === today.getTime();
-            })
+          const mapped = res.data
             .map(record => ({
               id: record._id,
-              employee: record.employeeId?.employeeId || record.employeeId?.email || 'Unknown',
+              employee: record.employeeName || record.employeeId?.fullName || record.employeeId?.employeeId || record.employeeId?.email || 'Unknown',
               date: new Date(record.date),
               day: new Date(record.date).toLocaleString('default', { weekday: 'short' }),
               checkIn: record.checkIn ? new Date(record.checkIn) : null,
@@ -67,7 +60,7 @@ const Attendance = () => {
               status: record.status,
             }));
 
-          setAttendanceData(filtered);
+          setAttendanceData(mapped);
         } else {
           const res = await axios.get(`/api/attendance/me?month=${month}&year=${year}`, config);
           setAttendanceData(buildMonthRows(res.data, month, year));
@@ -110,7 +103,7 @@ const Attendance = () => {
               <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Attendance</h1>
               <p className="mt-2 text-slate-500 max-w-2xl">
                 {isAdmin
-                  ? 'Today’s present employees attendance summary. Use the search to locate attendance records quickly.'
+                  ? 'All employees attendance records for the selected month. Use the search to locate attendance records quickly.'
                   : `Your attendance for ${monthLabel} ${year}. The system uses these records for payslip computation.`}
               </p>
             </div>

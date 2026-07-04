@@ -2,21 +2,42 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Check, X } from "lucide-react";
 
-export default function LeaveTable() {
+export default function LeaveTable({ search = "" }) {
   const [leaves, setLeaves] = useState([]);
   const [filteredLeaves, setFilteredLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const getAttachmentUrl = (path) => {
+    if (!path) return "";
+    if (path.startsWith("http")) return path;
+    const cleanPath = path.replace(/\\/g, "/");
+    return `http://localhost:5001/${cleanPath.startsWith("/") ? cleanPath.slice(1) : cleanPath}`;
+  };
 
   useEffect(() => {
     fetchLeaves();
   }, []);
 
+  useEffect(() => {
+    if (!search.trim()) {
+      setFilteredLeaves(leaves);
+    } else {
+      const q = search.toLowerCase();
+      setFilteredLeaves(
+        leaves.filter((l) =>
+          (l.employee?.fullName || l.employeeName || "").toLowerCase().includes(q) ||
+          (l.type || "").toLowerCase().includes(q) ||
+          (l.status || "").toLowerCase().includes(q)
+        )
+      );
+    }
+  }, [search, leaves]);
+
   const fetchLeaves = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      // Change this endpoint to yours
-      const res = await axios.get("/api/timeoff/all", {
+      const res = await axios.get("/api/leave/all", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -35,8 +56,8 @@ export default function LeaveTable() {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.put(
-        `/api/timeoff/${id}`,
+      await axios.patch(
+        `/api/leave/${id}/status`,
         { status },
         {
           headers: {
@@ -46,12 +67,6 @@ export default function LeaveTable() {
       );
 
       setLeaves((prev) =>
-        prev.map((leave) =>
-          leave._id === id ? { ...leave, status } : leave
-        )
-      );
-
-      setFilteredLeaves((prev) =>
         prev.map((leave) =>
           leave._id === id ? { ...leave, status } : leave
         )
@@ -100,6 +115,10 @@ export default function LeaveTable() {
                 Status
               </th>
 
+              <th className="text-left px-6 py-4">
+                Remarks / Doc
+              </th>
+
               <th className="text-center px-6 py-4">
                 Action
               </th>
@@ -114,7 +133,7 @@ export default function LeaveTable() {
               <tr>
 
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="text-center py-12 text-slate-500"
                 >
                   No Leave Requests
@@ -151,9 +170,9 @@ export default function LeaveTable() {
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-medium
                     ${
-                      leave.type === "Paid"
+                      leave.type?.toLowerCase() === "paid"
                         ? "bg-blue-100 text-blue-700"
-                        : leave.type === "Sick"
+                        : leave.type?.toLowerCase() === "sick"
                         ? "bg-green-100 text-green-700"
                         : "bg-red-100 text-red-700"
                     }`}
@@ -168,9 +187,9 @@ export default function LeaveTable() {
                   <span
                     className={`px-3 py-1 rounded-full text-sm
                     ${
-                      leave.status === "Approved"
+                      leave.status?.toLowerCase() === "approved"
                         ? "bg-green-100 text-green-700"
-                        : leave.status === "Rejected"
+                        : leave.status?.toLowerCase() === "rejected"
                         ? "bg-red-100 text-red-700"
                         : "bg-yellow-100 text-yellow-700"
                     }`}
@@ -180,9 +199,23 @@ export default function LeaveTable() {
 
                 </td>
 
+                <td className="px-6 py-5 max-w-[200px] truncate">
+                  <div className="text-sm text-slate-700">{leave.remarks || "—"}</div>
+                  {leave.attachment && (
+                    <a
+                      href={getAttachmentUrl(leave.attachment)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-purple-600 underline hover:text-purple-800 block mt-1"
+                    >
+                      View Cert
+                    </a>
+                  )}
+                </td>
+
                 <td className="px-6 py-5">
 
-                  {leave.status === "Pending" ? (
+                  {leave.status?.toLowerCase() === "pending" ? (
                     <div className="flex justify-center gap-3">
 
                       <button

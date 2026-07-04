@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 
-export default function TimeOffHeader({openModal}){
-
-    const [search,setSearch]=useState("");
+export default function TimeOffHeader({ openModal, search: propSearch, onSearchChange }){
+    const [localSearch, setLocalSearch] = useState("");
+    const search = propSearch !== undefined ? propSearch : localSearch;
+    const handleSearch = (val) => {
+        if (onSearchChange) onSearchChange(val);
+        else setLocalSearch(val);
+    };
 
     return(
 
@@ -42,7 +46,7 @@ export default function TimeOffHeader({openModal}){
 
                     <input
                         value={search}
-                        onChange={(e)=>setSearch(e.target.value)}
+                        onChange={(e)=>handleSearch(e.target.value)}
                         placeholder="Search Employee"
                         className="pl-10 w-72 border rounded-lg py-2 outline-none focus:border-purple-500"
                     />

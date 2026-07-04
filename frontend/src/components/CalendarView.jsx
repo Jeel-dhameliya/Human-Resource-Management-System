@@ -20,7 +20,7 @@ export default function CalendarView({ openModal }) {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.get("/api/timeoff/me", {
+      const res = await axios.get("/api/leave/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -41,14 +41,15 @@ export default function CalendarView({ openModal }) {
 
   const eventStyleGetter = (event) => {
     let backgroundColor = "#8b5cf6";
+    const st = event.status?.toLowerCase();
 
-    if (event.status === "Approved")
+    if (st === "approved")
       backgroundColor = "#22c55e";
 
-    if (event.status === "Rejected")
+    if (st === "rejected")
       backgroundColor = "#ef4444";
 
-    if (event.status === "Pending")
+    if (st === "pending")
       backgroundColor = "#f59e0b";
 
     return {

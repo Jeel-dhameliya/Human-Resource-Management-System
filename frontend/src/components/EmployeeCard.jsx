@@ -25,7 +25,8 @@ const EmployeeCard = ({ employee, status }) => {
 
   const renderAvatar = () => {
     if (employee.personalDetails?.profilePic) {
-      return <img src={`http://localhost:5001/${employee.personalDetails.profilePic}`} alt={employee.fullName} className="w-full h-full object-cover" />;
+      const pic = employee.personalDetails.profilePic;
+      return <img src={pic.startsWith('http') ? pic : `http://localhost:5001/${pic.replace(/^\//, '').replace(/\\/g, '/')}`} alt={employee.fullName} className="w-full h-full object-cover" />;
     }
     return <div className="font-semibold text-slate-500 text-2xl">{employee.fullName.charAt(0).toUpperCase()}</div>;
   };

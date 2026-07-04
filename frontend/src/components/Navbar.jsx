@@ -137,7 +137,7 @@ const Navbar = () => {
       <div className="flex-1">
         {companyInfo?.logoUrl ? (
           <img
-            src={`http://localhost:5001${companyInfo.logoUrl}`}
+            src={companyInfo.logoUrl.startsWith('http') ? companyInfo.logoUrl : `http://localhost:5001/${companyInfo.logoUrl.replace(/^\//, '').replace(/\\/g, '/')}`}
             alt="Company Logo"
             className="max-h-10 object-contain"
           />
@@ -183,7 +183,7 @@ const Navbar = () => {
           <div className="w-[45px] h-[45px] rounded-full relative bg-slate-200 flex items-center justify-center border-2 border-white shadow-[0_2px_4px_rgba(0,0,0,0.1)]">
             {userProfile?.personalDetails?.profilePic ? (
               <img
-                src={`http://localhost:5001/${userProfile.personalDetails.profilePic}`}
+                src={userProfile.personalDetails.profilePic.startsWith('http') ? userProfile.personalDetails.profilePic : `http://localhost:5001/${userProfile.personalDetails.profilePic.replace(/^\//, '').replace(/\\/g, '/')}`}
                 alt="Avatar"
                 className="w-full h-full rounded-full object-cover"
               />
@@ -201,7 +201,13 @@ const Navbar = () => {
 
           {dropdownOpen && (
             <div className="absolute top-[60px] right-0 w-[220px] bg-white rounded-lg shadow-xl border border-slate-200 overflow-hidden">
-              <div className="px-5 py-4 font-medium hover:bg-slate-50 cursor-pointer">
+              <div 
+                className="px-5 py-4 font-medium hover:bg-slate-50 cursor-pointer"
+                onClick={() => {
+                  setDropdownOpen(false);
+                  navigate(`/employee/${userProfile?._id || userProfile?.userId?._id || 'me'}`);
+                }}
+              >
                 My Profile
               </div>
 

@@ -70,7 +70,7 @@ const signup = async (req, res, next) => {
       verificationTokenExpires,
     });
 
-    const logoPath = req.file ? req.file.path : '';
+    const logoPath = req.file ? req.file.path.replace(/\\/g, '/') : '';
 
     // Create the linked Employee profile shell
     await Employee.create({
@@ -186,8 +186,9 @@ const getCompanyLogo = async (req, res, next) => {
       return res.status(404).json({ message: 'No logo found.' });
     }
 
+    const cleanPath = adminProfileWithLogo.personalDetails.profilePic.replace(/\\/g, '/').replace(/^\//, '');
     res.status(200).json({ 
-      logoUrl: `/${adminProfileWithLogo.personalDetails.profilePic}`,
+      logoUrl: `/${cleanPath}`,
       companyName: adminProfileWithLogo.companyName 
     });
   } catch (error) {

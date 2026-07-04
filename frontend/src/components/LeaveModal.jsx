@@ -9,25 +9,25 @@ export default function LeaveModal({ close }) {
   const [type, setType] = useState("Paid");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [remarks, setRemarks] = useState("");
   const [attachment, setAttachment] = useState(null);
 
   useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await axios.get("/api/employees/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setEmployee(res.data.fullName || res.data.userId?.email || "Me");
+      } catch (err) {
+        console.log(err);
+      }
+    };
     fetchProfile();
-  }, []);
-
-  const fetchProfile = async () => {
-    try {
-      const res = await axios.get("/api/employees/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setEmployee(res.data.fullName);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  }, [token]);
 
   const totalDays = () => {
     if (!startDate || !endDate) return 0;
@@ -47,12 +47,13 @@ export default function LeaveModal({ close }) {
       formData.append("type", type);
       formData.append("startDate", startDate);
       formData.append("endDate", endDate);
+      formData.append("remarks", remarks);
 
       if (attachment) {
         formData.append("attachment", attachment);
       }
 
-      await axios.post("/api/timeoff", formData, {
+      await axios.post("/api/leave/apply", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -168,6 +169,19 @@ export default function LeaveModal({ close }) {
               className="w-full border rounded-lg px-4 py-2 bg-slate-100"
             />
 
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Remarks / Reason
+            </label>
+            <textarea
+              rows="2"
+              placeholder="Provide a brief reason for your leave request..."
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
+              className="w-full border rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-purple-500"
+            />
           </div>
 
           {type === "Sick" && (

@@ -111,7 +111,19 @@ const getAllAttendance = async (req, res, next) => {
       .populate('employeeId', 'employeeId email')
       .sort({ date: 1 });
 
-    res.status(200).json(records);
+    const Employee = require('../models/Employee');
+    const empProfiles = await Employee.find({});
+    const empMap = new Map();
+    empProfiles.forEach(p => empMap.set(p.userId?.toString(), p));
+
+    const enrichedRecords = records.map(record => {
+      const recObj = record.toObject();
+      const emp = empMap.get(record.employeeId?._id?.toString() || record.employeeId?.toString());
+      recObj.employeeName = emp?.fullName || record.employeeId?.email || 'Unknown';
+      return recObj;
+    });
+
+    res.status(200).json(enrichedRecords);
   } catch (error) {
     next(error);
   }

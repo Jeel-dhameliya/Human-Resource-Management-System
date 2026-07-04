@@ -8,6 +8,7 @@ import LeaveModal from "../components/LeaveModal";
 
 export default function TimeOff() {
     const [showModal,setShowModal]=useState(false);
+    const [search,setSearch]=useState("");
     const user = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user') || 'null') : null;
     const role = user?.role || 'employee';
 
@@ -21,6 +22,8 @@ export default function TimeOff() {
 
                     <TimeOffHeader
                         openModal={()=>setShowModal(true)}
+                        search={search}
+                        onSearchChange={setSearch}
                     />
 
                     <LeaveBalance/>
@@ -28,7 +31,7 @@ export default function TimeOff() {
                     {
                         role==="admin"
                         ?
-                        <LeaveTable/>
+                        <LeaveTable search={search} />
                         :
                         <CalendarView
                             openModal={()=>setShowModal(true)}

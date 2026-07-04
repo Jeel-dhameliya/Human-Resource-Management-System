@@ -18,7 +18,7 @@ const Login = () => {
     // Fetch the global company logo
     axios.get('/api/auth/company-logo')
       .then(res => setCompanyInfo(res.data))
-      .catch(err => console.log('No global company logo found yet.'));
+      .catch(() => console.log('No global company logo found yet.'));
   }, []);
 
   const handleChange = (e) => {
@@ -52,7 +52,7 @@ const Login = () => {
         <h2 className="text-center mb-8 text-2xl font-medium flex justify-center">
           {companyInfo?.logoUrl ? (
             <img 
-              src={`http://localhost:5001${companyInfo.logoUrl}`} 
+              src={companyInfo.logoUrl.startsWith('http') ? companyInfo.logoUrl : `http://localhost:5001/${companyInfo.logoUrl.replace(/^\//, '').replace(/\\/g, '/')}`} 
               alt={companyInfo.companyName || "Company Logo"} 
               className="max-h-[60px] object-contain"
             />

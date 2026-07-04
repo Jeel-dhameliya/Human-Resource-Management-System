@@ -9,7 +9,21 @@ const {
   updateLeaveStatus,
 } = require('../controllers/leaveController');
 
-router.post('/apply', protect, applyLeave);
+const multer = require('multer');
+const fs = require('fs');
+
+const uploadDir = 'uploads/leaves/';
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, uploadDir),
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
+});
+const upload = multer({ storage });
+
+router.post('/apply', protect, upload.single('attachment'), applyLeave);
 router.get('/me', protect, getMyLeaves);
 
 // Admin-only

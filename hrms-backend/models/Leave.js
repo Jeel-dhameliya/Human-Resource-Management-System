@@ -9,16 +9,18 @@ const leaveSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['paid', 'sick', 'unpaid'],
+      enum: ['paid', 'sick', 'unpaid', 'Paid', 'Sick', 'Unpaid'],
       required: true,
     },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     remarks: { type: String, default: '' },
+    attachment: { type: String, default: '' },
+    employeeName: { type: String, default: '' },
     status: {
       type: String,
-      enum: ['pending', 'approved', 'rejected'],
-      default: 'pending',
+      enum: ['pending', 'approved', 'rejected', 'Pending', 'Approved', 'Rejected'],
+      default: 'Pending',
     },
     adminComment: { type: String, default: '' },
     reviewedBy: {

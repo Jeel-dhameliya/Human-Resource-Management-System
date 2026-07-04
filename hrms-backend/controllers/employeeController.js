@@ -40,7 +40,10 @@ const updateMyProfile = async (req, res, next) => {
       }
     });
 
-    const profile = await Employee.findOneAndUpdate(
+      if (req.file) {
+        updates['personalDetails.profilePic'] = req.file.path.replace(/\\/g, '/');
+      }
+      const profile = await Employee.findOneAndUpdate(
       { userId: req.user._id },
       { $set: updates },
       { new: true, runValidators: true }
@@ -93,7 +96,12 @@ const getEmployeeById = async (req, res, next) => {
 // @access  Private/Admin
 const updateEmployeeById = async (req, res, next) => {
   try {
-    const profile = await Employee.findByIdAndUpdate(req.params.id, req.body, {
+    const updateData = { ...req.body };
+    if (req.file) {
+      if (!updateData.personalDetails) updateData.personalDetails = {};
+      updateData.personalDetails.profilePic = req.file.path.replace(/\\/g, '/');
+    }
+    const profile = await Employee.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
       runValidators: true,
     });

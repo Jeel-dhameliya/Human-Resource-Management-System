@@ -17,7 +17,9 @@ const Signup = () => {
     email: '',
     phone: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    role: 'admin',
+    employeeId: ''
   });
 
   const [logoFile, setLogoFile] = useState(null);
@@ -49,13 +51,14 @@ const Signup = () => {
       data.append('password', formData.password);
       data.append('companyName', formData.companyName);
       data.append('phone', formData.phone);
-      data.append('role', 'admin');
+      data.append('role', formData.role);
+      if (formData.employeeId) data.append('employeeId', formData.employeeId);
       
       if (logoFile) {
         data.append('logo', logoFile);
       }
       
-      const response = await axios.post('/api/auth/signup', data, {
+      await axios.post('/api/auth/signup', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setSuccess('Registration successful! Please login.');
@@ -119,6 +122,19 @@ const Signup = () => {
           </div>
 
           <div className="mb-6 relative">
+            <label htmlFor="employeeId" className="block text-sm font-medium text-slate-800 mb-2">Employee ID (Optional) :-</label>
+            <input
+              type="text"
+              id="employeeId"
+              name="employeeId"
+              placeholder="e.g. EMP-001 (auto-generated if empty)"
+              className="w-full px-4 py-3 text-base text-slate-800 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-3 focus:ring-purple-500/15 transition-all"
+              value={formData.employeeId}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="mb-6 relative">
             <label htmlFor="name" className="block text-sm font-medium text-slate-800 mb-2">Name :-</label>
             <input
               type="text"
@@ -155,6 +171,20 @@ const Signup = () => {
               onChange={handleChange}
               required
             />
+          </div>
+
+          <div className="mb-6 relative">
+            <label htmlFor="role" className="block text-sm font-medium text-slate-800 mb-2">Account Role :-</label>
+            <select
+              id="role"
+              name="role"
+              className="w-full px-4 py-3 text-base text-slate-800 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-3 focus:ring-purple-500/15 transition-all"
+              value={formData.role}
+              onChange={handleChange}
+            >
+              <option value="admin">Admin / HR Manager</option>
+              <option value="employee">Employee</option>
+            </select>
           </div>
 
           <div className="mb-6 relative">
