@@ -27,12 +27,16 @@ const getMyProfile = async (req, res, next) => {
 const updateMyProfile = async (req, res, next) => {
   try {
     // Employees may only edit these fields per spec: "address, phone, profile picture"
-    const allowedUpdates = ['phone', 'address', 'profilePic'];
+    const allowedUpdates = ['phone', 'address', 'profilePic', 'resume'];
     const updates = {};
 
     allowedUpdates.forEach((field) => {
       if (req.body[field] !== undefined) {
-        updates[`personalDetails.${field}`] = req.body[field];
+        if (field === 'resume') {
+          updates['resume'] = req.body.resume;
+        } else {
+          updates[`personalDetails.${field}`] = req.body[field];
+        }
       }
     });
 

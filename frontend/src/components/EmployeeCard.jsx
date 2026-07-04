@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Plane } from 'lucide-react';
 
 const EmployeeCard = ({ employee, status }) => {
+  const navigate = useNavigate();
   let StatusIcon;
   let statusColor;
 
@@ -29,7 +31,7 @@ const EmployeeCard = ({ employee, status }) => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-6 transition-all duration-200 cursor-pointer flex flex-col items-center relative hover:shadow-md hover:border-purple-500 hover:-translate-y-0.5" onClick={() => alert(`View Profile: ${employee.fullName}`)}>
+    <div className="bg-white border border-slate-200 rounded-xl p-6 transition-all duration-200 cursor-pointer flex flex-col items-center relative hover:shadow-md hover:border-purple-500 hover:-translate-y-0.5" onClick={() => navigate(`/employee/${employee._id}`)}>
       <div className="w-full flex justify-between items-start absolute top-4 left-4 right-4 w-auto">
         <input type="radio" className="cursor-pointer w-4 h-4 accent-purple-600" name="selectedEmployee" value={employee._id} onClick={(e) => e.stopPropagation()} />
         <div className="relative">
